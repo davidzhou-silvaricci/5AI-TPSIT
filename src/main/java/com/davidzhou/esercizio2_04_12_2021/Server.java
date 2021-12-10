@@ -1,4 +1,4 @@
-package com.davidzhou.datagram_socket.esercizio2_04_12_2021;
+package com.davidzhou.esercizio2_04_12_2021;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

@@ -1,4 +1,4 @@
-package com.davidzhou.datagram_socket.esercizio1_04_12_2021;
+package com.davidzhou.esercizio1_04_12_2021;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
