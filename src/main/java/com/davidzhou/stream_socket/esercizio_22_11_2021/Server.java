@@ -1,4 +1,4 @@
-package com.davidzhou.esercizio_22_11_2021;
+package com.davidzhou.stream_socket.esercizio_22_11_2021;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
