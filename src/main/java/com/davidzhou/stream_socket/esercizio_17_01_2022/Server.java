@@ -1,4 +1,4 @@
-package esercizio_17_01_2022;
+package com.davidzhou.stream_socket.esercizio_17_01_2022;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,17 +14,15 @@ public class Server
     
     public Server() throws IOException {
         server = new ServerSocket(PORT);
+        client = server.accept();
     }
     
     public void startCalculator() throws IOException
     {   
-        while(!server.isClosed())
+        try (DataInputStream in = new DataInputStream(client.getInputStream());
+                DataOutputStream out = new DataOutputStream(client.getOutputStream());)
         {
-            // Attende una richiesta
-            client = server.accept();
-            
-            try (DataInputStream in = new DataInputStream(client.getInputStream());
-                    DataOutputStream out = new DataOutputStream(client.getOutputStream());)
+            while(!server.isClosed())
             {
                 String operazione = in.readUTF();
                 String[] parametri = operazione.split(";");
@@ -38,12 +36,11 @@ public class Server
                 }
                 catch(NumberFormatException e) {
                     System.err.print("[S] - Formato della richiesta non corretto.");
-                    out.writeUTF("Errore nel formato della richiesta");
                 }
             }
-            catch(IOException e) {
-                System.err.print(e);
-            }
+        }        
+        catch(IOException e) {
+            System.err.print(e);
         }
     }
     
@@ -70,7 +67,8 @@ public class Server
             case 3: return num1 / num2;
             case 4: return Math.pow(num1, num2);
             case 5: return Math.sqrt(num1);
-            default: throw new NumberFormatException();
         }
+         
+        return 0;
     }
 }

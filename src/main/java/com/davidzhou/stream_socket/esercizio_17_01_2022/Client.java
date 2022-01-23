@@ -1,4 +1,4 @@
-package esercizio_17_01_2022;
+package com.davidzhou.stream_socket.esercizio_17_01_2022;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,19 +15,15 @@ public class Client
         client = new Socket(server, port);
     }
     
-    public double calculate(String operazione)
+    public double calculate(String operazione) throws IOException
     {
         double risultato = 0;
         
-        try (DataInputStream in = new DataInputStream(client.getInputStream());
-                    DataOutputStream out = new DataOutputStream(client.getOutputStream());)
-        {
-            out.writeUTF(operazione);
-            risultato = in.readDouble();
-        }
-        catch(IOException e) {
-            System.err.print(e);
-        }
+        DataInputStream in = new DataInputStream(client.getInputStream());
+        DataOutputStream out = new DataOutputStream(client.getOutputStream());
+        
+        out.writeUTF(operazione);
+        risultato = in.readDouble();
         
         return risultato;
     }
