@@ -23,12 +23,12 @@ public class Server
                 received = in.readUTF();
                 System.out.println("[S]- Received: " + received);
 
-                if(received.equalsIgnoreCase("exit")) continue;
+                if(received.equalsIgnoreCase("exit")) break;
                 
                 String sent = received.toUpperCase();
                 out.writeUTF(sent);
             }
-            while(!received.equalsIgnoreCase("exit"));
+            while(true);
         }
         catch(IOException e) {
             System.err.print(e);

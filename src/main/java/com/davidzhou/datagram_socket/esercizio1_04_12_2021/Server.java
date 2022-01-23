@@ -29,14 +29,14 @@ public class Server
                 received = new String(dp.getData());         // Estrazione del testo
                 System.out.println("[S]- Received: " + received);
 
-                if(received.equalsIgnoreCase("exit")) continue;
+                if(received.equalsIgnoreCase("exit")) break;
                     
                 // Invio della risposta al Client
                 String sent = received.toUpperCase();           // Elaborazione
                 DatagramPacket dp2 = new DatagramPacket(sent.getBytes(), sent.length(), dp.getAddress(), dp.getPort());
                 ds.send(dp2);
             }
-            while(!received.equalsIgnoreCase("exit"));
+            while(true);
 
         }
         catch(SocketException e) {

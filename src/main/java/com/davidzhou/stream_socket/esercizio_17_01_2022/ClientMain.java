@@ -18,14 +18,17 @@ public class ClientMain
             
             System.out.println("0 = Addizione, 1 = Sottrazione, 2 = Moltiplicazione, 3 = Divisione, 4 = Potenza, 5 = Radice quadrata");
             
-            do {
+            do
+            {
                 String input = "";
-                do {
+                
+                do
+                {
                     System.out.println("Inserire operazione da eseguire:");
                     input = tastiera.next() + ";" + tastiera.next() + ";" + tastiera.next() + ";";
                 }
-                while(Integer.parseInt(input.split(";")[0]) < 0 ||
-                        Integer.parseInt(input.split(";")[0]) > 5);
+                while(Integer.parseInt(input.split(";")[0]) < 0
+                        || Integer.parseInt(input.split(";")[0]) > 5);
 
                 if(input.equalsIgnoreCase("exit;0;0;")) break;
                 

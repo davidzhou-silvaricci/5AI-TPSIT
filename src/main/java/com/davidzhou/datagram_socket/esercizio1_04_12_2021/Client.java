@@ -30,7 +30,7 @@ public class Client
                 // Invio del messaggio
                 ds.send(dp);
 
-                if(text.equalsIgnoreCase("exit")) continue;
+                if(text.equalsIgnoreCase("exit")) break;
                 
                 // Attesa di una risposta
                 byte[] buffer = new byte[max_length];
@@ -38,7 +38,7 @@ public class Client
                 ds.receive(dp2);
                 System.out.println("[C]- Received: " + new String(dp2.getData()));
             }
-            while(!text.equalsIgnoreCase("exit"));
+            while(true);
         }
         catch(SocketException e) {
             System.err.print(e);

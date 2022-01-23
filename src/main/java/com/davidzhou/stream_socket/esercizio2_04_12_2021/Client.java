@@ -27,11 +27,11 @@ public class Client
                 
                 out.writeUTF(text);
                 
-                if(text.equalsIgnoreCase("exit")) continue;
+                if(text.equalsIgnoreCase("exit")) break;
                 
                 System.out.println("[C] - Received: " + in.readUTF());
             }
-            while(!text.equalsIgnoreCase("exit"));
+            while(true);
         }
         catch(IOException e) {
             System.err.print(e);
