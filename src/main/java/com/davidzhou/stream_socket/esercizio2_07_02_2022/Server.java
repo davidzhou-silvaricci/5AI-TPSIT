@@ -49,12 +49,16 @@ public class Server
             
             System.out.println("[" + n + "]: " + numbers[0] + "," + numbers[1] + "," + numbers[2]);
             
-            if(++n == 21) n = 1;
+            if(++n == 6) n = 1;
+            if(connections.size() == 6) break;
             
             // Anche se l'esercizio afferma che si tratta di una connessione 1 a n,
             // in realtà è molto vicino ad una di tipo 1 a 1.
             // La classe Connection dunque non era strettamente necessaria.
         }
+        
+        for(Connection c: connections) { c.close(); }
+        server.close();
     }
     
     public static void main(String[] args)

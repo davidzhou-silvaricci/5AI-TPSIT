@@ -36,4 +36,11 @@ public class Connection
     public void send(int n) throws IOException {
         output.writeInt(n);
     }
+
+    public void close() throws IOException
+    {
+        input.close();
+        output.close();
+        client.close();
+    }
 }

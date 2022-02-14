@@ -37,11 +37,10 @@ public class Client
         this.id = input.readInt();
         System.out.println("ID ricevuto: " + id);
         
-        output.writeUTF("Mi è stato assegnato l'ID" + id);
+        // output.writeUTF("Mi è stato assegnato l'ID" + id);
         
         for(int i=0; i<3; i++) {
             numbers[i] = input.readInt();
-            i++;
         }
         
         System.out.println("Ho ricevuto i numeri: " + numbers[0] + "," + numbers[1] + "," + numbers[2]);
