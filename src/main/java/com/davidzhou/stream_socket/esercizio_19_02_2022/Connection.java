@@ -26,8 +26,8 @@ public class Connection
         this.id = id;
         this.client = client;
         
-        in = new DataInputStream(client.getInputStream());
-        out = new DataOutputStream(client.getOutputStream());
+        in = new DataInputStream(this.client.getInputStream());
+        out = new DataOutputStream(this.client.getOutputStream());
     }
     
     public void communicate() throws IOException {
