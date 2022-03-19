@@ -23,24 +23,31 @@ public class RegistrazioneStudente extends HttpServlet
         }
     }
     
-    private void processRequest(final HttpServletRequest req, final HttpServletResponse resp) throws SQLException, IOException, ClassNotFoundException
+    private void processRequest(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ClassNotFoundException
     {
-        final String url = "jdbc:mariadb://localhost:3306/my_registro_voti";
-        Class.forName("org.mariadb.jdbc.Driver");
-        Connection c = DriverManager.getConnection(url, "root", "");
-        
-        // Recupero dei dati dello studente
-        String[] parametri = new String[4];         // nome, cognome, email, sesso
-        parametri[0] = "'" + req.getParameter("nome") + "'";
-        parametri[1] = "'" + req.getParameter("cognome") + "'";
-        parametri[2] = "'" + req.getParameter("email") + "'";
-        parametri[3] = "'" + req.getParameter("sesso") + "'";
-        
-        String query = "INSERT INTO studente(nome, cognome, email, sesso) VALUES (" + String.join(", ", parametri) + ");";
-        Statement s = c.createStatement();
-        ResultSet rs = s.executeQuery(query);
-        
         PrintWriter out = resp.getWriter();
-        out.println("<html><body>Registrazione avvenuta con successo!</body></html>");
+        
+        try
+        {
+            final String url = "jdbc:mariadb://localhost:3306/my_registro_voti";
+            Class.forName("org.mariadb.jdbc.Driver");
+            Connection c = DriverManager.getConnection(url, "root", "");
+
+            // Recupero dei dati dello studente
+            String[] parametri = new String[4];         // nome, cognome, email, sesso
+            parametri[0] = "'" + req.getParameter("nome") + "'";
+            parametri[1] = "'" + req.getParameter("cognome") + "'";
+            parametri[2] = "'" + req.getParameter("email") + "'";
+            parametri[3] = "'" + req.getParameter("sesso") + "'";
+
+            String query = "INSERT INTO studente(nome, cognome, email, sesso) VALUES (" + String.join(", ", parametri) + ");";
+            Statement s = c.createStatement();
+            ResultSet rs = s.executeQuery(query);
+
+            out.println("<html><body>Registrazione avvenuta con successo!</body></html>");
+        }
+        catch(SQLException e) {
+            out.println("<html><body>I dati che hai inserito non sono validi.</body></html>");
+        }
     }
 }
