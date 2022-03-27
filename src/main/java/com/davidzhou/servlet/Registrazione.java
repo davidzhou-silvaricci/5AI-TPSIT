@@ -39,25 +39,25 @@ public class Registrazione extends HttpServlet
         }
         
         // Recupero dei dati dello studente
-        String[] parametri = new String[5];         // nome, cognome, email, genere, tipo
+        String[] parametri = new String[4];         // nome, cognome, email, genere
         parametri[0] = "'" + req.getParameter("nome") + "'";
         parametri[1] = "'" + req.getParameter("cognome") + "'";
         parametri[2] = "'" + req.getParameter("email") + "'";
         parametri[3] = "'" + req.getParameter("genere") + "'";
-        parametri[4] = "'" + req.getParameter("tipo") + "'";
+        
+        String tipo = req.getParameter("tipo");
 
-        String query = "INSERT INTO " + parametri[4] + "(nome, cognome, email, genere) VALUES (" + String.join(", ", parametri) + ");";
+        String query = "INSERT INTO " + tipo + "(nome, cognome, email, genere) VALUES (" + String.join(", ", parametri) + ");";
         
         try
         {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(query);
+            
+            out.println("<html><body>Registrazione avvenuta con successo!</body></html>");
         }
         catch(SQLException e) {
             out.println("<html><body>I dati che hai inserito non sono validi.</body></html>");
         }
-
-        out.println("<html><body>Registrazione avvenuta con successo!</body></html>");
-        
     }
 }
