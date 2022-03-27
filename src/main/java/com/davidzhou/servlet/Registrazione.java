@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class RegistrazioneStudente extends HttpServlet
+public class Registrazione extends HttpServlet
 {
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
@@ -39,13 +39,14 @@ public class RegistrazioneStudente extends HttpServlet
         }
         
         // Recupero dei dati dello studente
-        String[] parametri = new String[4];         // nome, cognome, email, sesso
+        String[] parametri = new String[5];         // nome, cognome, email, genere, tipo
         parametri[0] = "'" + req.getParameter("nome") + "'";
         parametri[1] = "'" + req.getParameter("cognome") + "'";
         parametri[2] = "'" + req.getParameter("email") + "'";
-        parametri[3] = "'" + req.getParameter("sesso") + "'";
+        parametri[3] = "'" + req.getParameter("genere") + "'";
+        parametri[4] = "'" + req.getParameter("tipo") + "'";
 
-        String query = "INSERT INTO studente(nome, cognome, email, sesso) VALUES (" + String.join(", ", parametri) + ");";
+        String query = "INSERT INTO " + parametri[4] + "(nome, cognome, email, genere) VALUES (" + String.join(", ", parametri) + ");";
         
         try
         {
