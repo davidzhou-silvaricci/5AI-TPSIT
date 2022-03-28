@@ -35,19 +35,32 @@ public class Registrazione extends HttpServlet
             c = DriverManager.getConnection(url, "tpsit", "tpsit");
         }
         catch(SQLException e) {
+            e.printStackTrace();
             out.println("<html><body>Non è possibile connettersi al database, riprova più tardi.</body></html>");
         }
         
-        // Recupero dei dati dello studente
-        String[] parametri = new String[4];         // nome, cognome, email, genere
-        parametri[0] = "'" + req.getParameter("nome") + "'";
-        parametri[1] = "'" + req.getParameter("cognome") + "'";
-        parametri[2] = "'" + req.getParameter("email") + "'";
-        parametri[3] = "'" + req.getParameter("genere") + "'";
-        
         String tipo = req.getParameter("tipo");
+        
+        // Recupero dei dati
+        String[] campi = null;
+        String[] parametri = null;
+        
+        if(tipo.equals("studente") || tipo.equals("docente"))
+        {
+            campi = new String[]{"nome", "cognome", "email", "genere"};
+            parametri = new String[4];
+        }
+        else if(tipo.equals("materia"))
+        {
+            campi = new String[]{"nome", "descrizione"};
+            parametri = new String[2];
+        }
+        
+        for(int i=0; i<campi.length; i++) {
+            parametri[i] = "'" + req.getParameter(campi[i]) + "'";
+        }
 
-        String query = "INSERT INTO " + tipo + "(nome, cognome, email, genere) VALUES (" + String.join(", ", parametri) + ");";
+        String query = "INSERT INTO " + tipo + "(" + String.join(", ", campi) + ") VALUES (" + String.join(", ", parametri) + ");";
         
         try
         {
@@ -57,6 +70,7 @@ public class Registrazione extends HttpServlet
             out.println("<html><body>Registrazione avvenuta con successo!</body></html>");
         }
         catch(SQLException e) {
+            e.printStackTrace();
             out.println("<html><body>I dati che hai inserito non sono validi.</body></html>");
         }
     }
