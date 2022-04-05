@@ -54,25 +54,21 @@ public class Elenco extends HttpServlet
             
             String[] dati = null;
 
-            if (tipo.equals("studente") || tipo.equals("docente"))
-            {
+            if (tipo.equals("studente") || tipo.equals("docente")) {
                 campi = new String[]{"nome", "cognome", "email", "genere"};
-                dati = new String[4];
             }
-            else if (tipo.equals("materia"))
-            {
+            else if (tipo.equals("materia")) {
                 campi = new String[]{"nome", "descrizione"};
-                dati = new String[2];
             }
             
             while(rs.next())
             {   
+                dati = new String[campi.length];
                 for(int i=0; i<campi.length; i++) {
                     dati[i] = rs.getString(campi[i]);
                 }
                 elenco.add(dati);
             }
-            System.out.println(elenco.toString());
         }
         catch(SQLException e) {
             e.printStackTrace();
