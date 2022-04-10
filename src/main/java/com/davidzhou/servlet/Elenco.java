@@ -41,6 +41,9 @@ public class Elenco extends HttpServlet
         }
         
         String tipo = req.getParameter("tipo");
+        String nomeElenco = tipo;
+        String nomeElencoPlurale = formatta(tipo);
+        
         String query = "SELECT * FROM " + tipo + ";";
         System.out.println(query);
         
@@ -75,10 +78,30 @@ public class Elenco extends HttpServlet
             //out.println("<html><body>I dati richiesti non sono disponibili.</body></html>");
         }
         
+        req.setAttribute("nome_elenco", nomeElenco);
+        req.setAttribute("nome_elenco_plurale", nomeElencoPlurale);
         req.setAttribute("campi", campi);
         req.setAttribute("elenco", elenco);
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("elenco.jsp");
         dispatcher.forward(req, resp);
+    }
+    
+    private String formatta(String tipo)
+    {
+        String s = "";
+        switch(tipo)
+        {
+            case "studente":
+                s = "Studenti";
+                break;
+            case "docente":
+                s = "Docenti";
+                break;
+            case "materia":
+                s = "Materie";
+                break;
+        }
+        return s;
     }
 }
