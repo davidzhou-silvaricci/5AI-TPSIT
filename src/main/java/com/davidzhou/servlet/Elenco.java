@@ -28,6 +28,9 @@ public class Elenco extends HttpServlet
     
     private void processRequest(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ClassNotFoundException, ServletException
     {
+        String stato = "";
+        String messaggio = "";
+        
         final String url = "jdbc:mariadb://localhost:3306/my_registro_voti";
         Class.forName("org.mariadb.jdbc.Driver");
         Connection c = null;
@@ -41,8 +44,15 @@ public class Elenco extends HttpServlet
         }
         
         String tipo = req.getParameter("tipo");
-        String nomeElenco = tipo;
-        String nomeElencoPlurale = formatta(tipo);
+        
+        if(!(tipo.equals("studente") || tipo.equals("docente") || tipo.equals("materia")))
+        {
+            stato = "Richiesta rifiutata";
+            messaggio = "Impossibile visualizzare la pagina che hai richiesto.";
+            showMessage(stato, messaggio, req, resp);
+        }
+        
+        String nomeElenco = formatta(tipo);
         
         String query = "SELECT * FROM " + tipo + ";";
         System.out.println(query);
@@ -78,8 +88,8 @@ public class Elenco extends HttpServlet
             //out.println("<html><body>I dati richiesti non sono disponibili.</body></html>");
         }
         
-        req.setAttribute("nome_elenco", nomeElenco);
-        req.setAttribute("nome_elenco_plurale", nomeElencoPlurale);
+        req.setAttribute("nome_elenco", tipo);
+        req.setAttribute("nome_elenco_plurale", nomeElenco);
         req.setAttribute("campi", campi);
         req.setAttribute("elenco", elenco);
 
@@ -103,5 +113,14 @@ public class Elenco extends HttpServlet
                 break;
         }
         return s;
+    }
+    
+    private void showMessage(String stato, String messaggio, HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException
+    {
+        req.setAttribute("stato", stato);
+        req.setAttribute("messaggio", messaggio);
+
+        RequestDispatcher dispatcher = req.getRequestDispatcher("messaggio.jsp");
+        dispatcher.forward(req, resp);
     }
 }

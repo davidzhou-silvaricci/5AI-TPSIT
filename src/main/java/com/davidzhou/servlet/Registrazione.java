@@ -16,6 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 public class Registrazione extends HttpServlet
 {
     @Override
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ServletException {
+        this.showForm(req, resp);
+    }
+    
+    @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         try {
             this.processRequest(req, resp);
@@ -23,6 +28,24 @@ public class Registrazione extends HttpServlet
         catch(Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    private void showForm(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ServletException
+    {
+        String stato = "";
+        String messaggio = "";
+        String tipo = req.getParameter("tipo");
+        
+        if(!(tipo.equals("studente") || tipo.equals("docente") || tipo.equals("materia")))
+        {
+            stato = "Richiesta rifiutata";
+            messaggio = "Impossibile visualizzare la pagina che hai richiesto.";
+            showMessage(stato, messaggio, req, resp);
+        }
+        
+        req.setAttribute("nome_elenco", tipo);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("registrazione.jsp");
+        dispatcher.forward(req, resp);
     }
     
     private void processRequest(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ClassNotFoundException, ServletException
@@ -42,7 +65,7 @@ public class Registrazione extends HttpServlet
             e.printStackTrace();
             //out.println("<html><body>Non è possibile connettersi al database, riprova più tardi.</body></html>");
             stato = "Errore di connessione";
-            messaggio = "Si è verificato un errore di connessione al databse, riprova più tardi.";
+            messaggio = "Si è verificato un errore di connessione al database, riprova più tardi.";
             showMessage(stato, messaggio, req, resp);
         }
         
