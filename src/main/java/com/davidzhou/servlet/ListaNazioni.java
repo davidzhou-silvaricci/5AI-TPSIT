@@ -65,7 +65,7 @@ public class ListaNazioni extends HttpServlet
         req.setAttribute("campi", campi);
         req.setAttribute("lista", lista);
         
-        req.getRequestDispatcher("/nazioni.jsp").forward(req, resp);
+        req.getRequestDispatcher("index.jsp").forward(req, resp);
     }
 
     public static class Nazione

@@ -77,13 +77,13 @@ public class Registrazione extends HttpServlet
         
         if(tipo.equals("studente") || tipo.equals("docente"))
         {
-            campi = new String[]{"nome", "cognome", "email", "genere"};
-            parametri = new String[4];
+            campi = new String[]{"codice_fiscale", "nome", "cognome", "email", "genere"};
+            parametri = new String[campi.length];
         }
         else if(tipo.equals("materia"))
         {
             campi = new String[]{"nome", "descrizione"};
-            parametri = new String[2];
+            parametri = new String[campi.length];
         }
         
         for(int i=0; i<campi.length; i++) {
