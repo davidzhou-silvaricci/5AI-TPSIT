@@ -18,7 +18,7 @@ public class AnimeUp extends HttpServlet
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException
     {
-        ArrayList<Anime> airing = getTopList("recent/popular");
+        ArrayList<Anime> airing = getTopList("airing");
         ArrayList<Anime> upcoming = getTopList("upcoming");
         ArrayList<Anime> bypopularity = getTopList("bypopularity");
         
