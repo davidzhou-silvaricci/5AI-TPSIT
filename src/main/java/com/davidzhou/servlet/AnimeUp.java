@@ -1,11 +1,10 @@
-package com.davidzhou.servlet;
-
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,16 +17,46 @@ public class AnimeUp extends HttpServlet
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException
     {
-        ArrayList<Anime> airing = getTopList("airing");
-        ArrayList<Anime> upcoming = getTopList("upcoming");
-        ArrayList<Anime> bypopularity = getTopList("bypopularity");
+        RequestDispatcher rd = null;
+        String path = req.getServletPath();
         
-        req.setAttribute("airing", airing);
-        req.setAttribute("upcoming", upcoming);
-        req.setAttribute("bypopularity", bypopularity);
-        
-        // Inoltro della richiesta alla JSP
-        req.getRequestDispatcher("home.jsp").forward(req, resp);
+        if(path.contains("home"))
+        {
+            // Richiesta dei dati dall'API
+            ArrayList<Anime> airing = getTopList("airing");
+            ArrayList<Anime> upcoming = getTopList("upcoming");
+            ArrayList<Anime> bypopularity = getTopList("bypopularity");
+
+            // Impostazione degli attributi
+            req.setAttribute("airing", airing);
+            req.setAttribute("upcoming", upcoming);
+            req.setAttribute("bypopularity", bypopularity);
+            
+            // Impostazione della JSP a cui inoltrare in seguito la richiesta
+            rd = req.getRequestDispatcher("home.jsp");
+            
+            // Inoltro della richiesta alla JSP
+            rd.forward(req, resp);
+        }
+        else if(path.contains("search"))
+        {
+            // Controllo del parametro 'query': verifico che esista e che sia diverso da ""
+            if(req.getParameterMap().containsKey("query") && !req.getParameter("query").equals(""))
+            {
+                String query = req.getParameter("query");
+
+                ArrayList<Anime> results = getSearchResults(query);
+
+                req.setAttribute("query", query);
+                req.setAttribute("results", results);
+
+                rd = req.getRequestDispatcher("results.jsp");
+                
+                // Inoltro della richiesta alla JSP
+                rd.forward(req, resp);
+            }
+            else resp.sendRedirect("home");
+        }
     }
     
     private ArrayList<Anime> getTopList(String filter)
@@ -41,20 +70,21 @@ public class AnimeUp extends HttpServlet
         // Richiesta dei dati in formato JSON
         String result = target.request(MediaType.APPLICATION_JSON).get(String.class);
         
-        // Parsing del JSON ricevuto
-        JSONObject obj = new JSONObject(result);
-        JSONArray data = obj.getJSONArray("data");
+        return getParsedData(result);
+    }
+    
+    private ArrayList<Anime> getSearchResults(String query)
+    {
+        // Inizializzazione Client
+        Client c = ClientBuilder.newClient();
         
-        // Iterazione dell'array
-        ArrayList<Anime> list = new ArrayList<>();
-        for(int i=0; i<data.length(); i++)
-        {
-            JSONObject animeData = data.getJSONObject(i);
-            // Creazione e inserimento dell'oggetto Anime in una lista
-            list.add(getAnimeObj(animeData));
-        }
+        // Impostazione dell'endpoint
+        WebTarget target = c.target("https://api.jikan.moe/v4/anime?q=" + query.replace(" ", "%20") + "&sfw=true");
         
-        return list;
+        // Richiesta dei dati in formato JSON
+        String result = target.request(MediaType.APPLICATION_JSON).get(String.class);
+        
+        return getParsedData(result);
     }
     
     private Anime getAnimeObj(JSONObject data)
@@ -64,6 +94,24 @@ public class AnimeUp extends HttpServlet
         String image = data.getJSONObject("images").getJSONObject("webp").getString("image_url");
         
         return new Anime(title, url, image);
+    }
+    
+    private ArrayList<Anime> getParsedData(String data)
+    {
+        // Parsing del JSON ricevuto
+        JSONObject obj = new JSONObject(data);
+        JSONArray array = obj.getJSONArray("data");
+        
+        // Iterazione dell'array
+        ArrayList<Anime> list = new ArrayList<>();
+        for(int i=0; i<array.length(); i++)
+        {
+            JSONObject animeData = array.getJSONObject(i);
+            // Creazione e inserimento dell'oggetto Anime nella lista
+            list.add(getAnimeObj(animeData));
+        }
+        
+        return list;
     }
 
     public static class Anime
